@@ -1,9 +1,28 @@
-#ifndef TIMERS_H
-#define TIMERS_H
+#ifndef INTERRUPT_H
+#define INTERRUPT_H
 
 #include "include/lm4f/lm4f120e5qr.h"
 
-void timers() 
+#define INT_TIMER_FLAG_NONE 0x00000000
+#define INT_TOGGLE_LED 0x00000001
+
+volatile uint32_t t_flags = INT_TIMER_FLAG_NONE;
+
+// pasihe: timer interrupt handler set in cstartup_M.c
+// we set flag on that timer0a interrupt called
+// no any time consuming logic allowed in interrupt, slows down MCU.
+// minimum processing as possible.
+void Timer0A_Handler(void)
+{  
+  t_flags = INT_TOGGLE_LED;
+  // If the GPTM Timer A Time-Out Raw Interrupt bit (TATORIS) is 1 then
+  // we have Timer A timeout.
+  // Clear TATORIS by writing a 1 to the TATOCINT bit in the 
+  // GPTMICR register. So counter restarts counting.
+  TIMER0->ICR |=(1<<0);
+}
+
+void interrupt() 
 {
   /*
   Programmable timers can be used to count or time external events that drive 
@@ -66,7 +85,14 @@ void timers()
   
   // 6. If interrupts are required, set the appropriate bits in the GPTM 
   // Interrupt Mask Register (GPTMIMR).
-  // Not using interrupts now.
+  // GPTM Timer A Time-Out Interrupt Mask TATOIM bit
+  TIMER0->IMR |= (1<<0);
+  NVIC->ISER[0] |= (1<<19); // enable bit 19 which is our vector table entry
+  // pasihe: another way to enable is to use core_cm4.h file: NVIC_EnableIRQ
+  // NVIC_EnableIRQ(TIMER0A_IRQn);
+  // surely advance of using function is that we don't have to know EN registry
+  // index at all since it is calculated in function.
+  // anyway function and direct ISER-manipulation is the same.
   
   // 7. Set the TnEN bit in the GPTMCTL register to enable the timer and 
   // start counting.
@@ -79,16 +105,13 @@ void timers()
   */
   while(1)
   {
-    // We have not masked GPTMIMR so reading the state of the GPTM's internal 
-    // interrupt signal.
-    // If the GPTM Timer A Time-Out Raw Interrupt bit (TATORIS) is 1 then
-    // we have Timer A timeout.
-    if(TIMER0->RIS & 0x01 == 0x01)
+    // pasihe: NOT needed to poll here, we just copy implementation 
+    // to Timer interrupt handler
+    // instead of polling, we check is interrupt flag set
+    if(t_flags == INT_TOGGLE_LED) 
     {
-      // Clear TATORIS by writing a 1 to the TATOCINT bit in the 
-      // GPTMICR register.
-      TIMER0->ICR |=(1<<0);
       GPIOF->DATA ^=(1<<2); // blink the led
+      t_flags = INT_TIMER_FLAG_NONE; //reset flag
     }
   }
 }

@@ -33,10 +33,11 @@ For more information, please refer to <http://unlicense.org>
 #include "include/leds.h"
 #include "include/switches.h"
 #include "include/timers.h"
+#include "include/interrupt.h"
 
 int main() 
 {
-  timers();
+  interrupt();
 }
 
 

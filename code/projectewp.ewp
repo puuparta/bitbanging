@@ -301,9 +301,8 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\CMSIS\Include</state>
-          <state>C:\TI-CMSIS-Devices-8636\TI\LM4F\Include</state>
           <state>$PROJ_DIR$\include</state>
+          <state>C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\CMSIS\Include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1890,12 +1889,30 @@
     </settings>
   </configuration>
   <group>
+    <name>documents</name>
+    <file>
+      <name>$PROJ_DIR$\..\documents\lm4f120h5qr-124014.pdf</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\documents\spmu289c.pdf</name>
+    </file>
+  </group>
+  <group>
     <name>include</name>
+    <file>
+      <name>$PROJ_DIR$\include\interrupt.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\include\leds.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\TI-CMSIS-Devices-8636\TI\LM4F\Include\LM4F120E5QR.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\include\switches.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\include\LM4F\system_LM4F.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\include\timers.h</name>
@@ -1904,6 +1921,9 @@
   <group>
     <name>src</name>
   </group>
+  <file>
+    <name>$PROJ_DIR$\cstartup_M.c</name>
+  </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
